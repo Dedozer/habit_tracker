@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/widgets/add_habits.dart';
 import 'package:habit_tracker/widgets/bad_habits_widget.dart';
 import 'package:habit_tracker/widgets/habits_widget.dart';
 
@@ -28,7 +29,7 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your onPressed code here!
+        Navigator.pushNamed(context, '/add_habits');
         },
         backgroundColor: Color.fromARGB(255, 16, 65, 104),
         child: const Icon(Icons.add_circle),

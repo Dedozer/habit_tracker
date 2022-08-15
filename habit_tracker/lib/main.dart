@@ -1,9 +1,31 @@
+import 'package:chopper/chopper.dart';
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/widgets/add_habits.dart';
 import 'package:habit_tracker/widgets/bad_habits_widget.dart';
 import 'package:habit_tracker/widgets/habits_widget.dart';
 import 'package:habit_tracker/widgets/main_screen_widget.dart';
 
-void main() {
+import 'generated/api.swagger.dart';
+import 'package:logging/logging.dart';
+
+import 'sources/api_keys.dart';
+
+void _setupLogging() {
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((rec) {
+    print('${rec.level.name}: ${rec.time}: ${rec.message}');
+  });
+}
+
+void main() async {
+  _setupLogging();
+  final api = Api.create();
+  print(api);
+  Response<Habits> getResult = await api.habitsGet(authorization: ApiKeys().authorization);
+  // for(var x in getResult.body!.habits!){
+  //   print(x);
+  //   print('-');
+  // }
   runApp(const MyApp());
 }
 
@@ -38,6 +60,7 @@ class MyApp extends StatelessWidget {
         '/good_habits': (context) => HabitsWidget(),
         '/bad_habits': (context) => BadHabitsWidget(),
         '/': (context) => MainScreenWidget(),
+        '/add_habits': ((context) => AddHabitsWidget()),
       },
       initialRoute: '/',
     );

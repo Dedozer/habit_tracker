@@ -1,0 +1,495 @@
+{
+   "swagger": "2.0",
+   "info": {
+      "description": "Swagger API for Android course https://www.youtube.com/watch?v=EoTrBnsHfeQ&list=PLQ09TvuOLytS_vYHtFHQzZJFcnbYCYF6x",
+      "title": "Android-Backend Swagger API",
+      "termsOfService": "http://swagger.io/terms/",
+      "contact": {
+         "name": "API Support"
+      },
+      "license": {
+         "name": "MIT",
+         "url": "https://github.com/MartinHeinz/go-project-blueprint/blob/master/LICENSE"
+      },
+      "version": "1.0"
+   },
+   "host": "https://habits-internship.doubletapp.ai",
+   "basePath": "/api",
+   "paths": {
+      "/habits": {
+         "get": {
+            "produces": [
+               "application/json"
+            ],
+            "tags": [
+               "Habit operations"
+            ],
+            "summary": "Get habits",
+            "parameters": [
+               {
+                  "type": "string",
+                  "description": "token",
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true
+               },
+               {
+                  "type": "integer",
+                  "name": "offset",
+                  "in": "query",
+                  "default": 0
+               },
+               {
+                  "type": "integer",
+                  "name": "limit",
+                  "in": "query",
+                  "default": 20
+               },
+               {
+                  "type": "string",
+                  "name": "order_by",
+                  "in": "query",
+                  "enum": [
+                     "date"
+                  ]
+               },
+               {
+                  "type": "string",
+                  "name": "order_direction",
+                  "in": "query",
+                  "default": "asc",
+                  "enum": [
+                     "asc",
+                     "desc"
+                  ]
+               },
+               {
+                  "type": "integer",
+                  "name": "type",
+                  "in": "query",
+                  "enum": [
+                     0,
+                     1
+                  ]
+               },
+               {
+                  "type": "string",
+                  "name": "title",
+                  "in": "query",
+                  "description": "filter by pattern"
+               }
+            ],
+            "responses": {
+               "200": {
+                  "description": "OK",
+                  "schema": {
+                     "$ref": "#/definitions/Habits"
+                  }
+               },
+               "401": {
+                  "description": "Unauthorized",
+                  "schema": {
+                     "$ref": "#/definitions/Error"
+                  }
+               },
+               "500": {
+                  "description": "Internal Server Error",
+                  "schema": {
+                     "$ref": "#/definitions/Error"
+                  }
+               }
+            }
+         },
+         "post": {
+            "produces": [
+               "application/json"
+            ],
+            "tags": [
+               "Habit operations"
+            ],
+            "summary": "Add habits",
+            "parameters": [
+               {
+                  "type": "string",
+                  "description": "token",
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true
+               },
+               {
+                  "name": "requestBody",
+                  "in": "body",
+                  "required": true,
+                  "schema": {
+                     "$ref": "#/definitions/AddHabit"
+                  }
+               }
+            ],
+            "responses": {
+               "200": {
+                  "description": "OK",
+                  "schema": {
+                     "$ref": "#/definitions/Habit"
+                  }
+               },
+               "401": {
+                  "description": "Unauthorized",
+                  "schema": {
+                     "$ref": "#/definitions/Error"
+                  }
+               },
+               "500": {
+                  "description": "Internal Server Error",
+                  "schema": {
+                     "$ref": "#/definitions/Error"
+                  }
+               }
+            }
+         }
+      },
+      "/habits/{id}": {
+         "delete": {
+            "tags": [
+               "Habit operations"
+            ],
+            "summary": "Delete habit",
+            "parameters": [
+               {
+                  "type": "string",
+                  "description": "token",
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true
+               },
+               {
+                  "type": "string",
+                  "name": "id",
+                  "in": "path",
+                  "required": true
+               }
+            ],
+            "responses": {
+               "200": {
+                  "description": "ok",
+                  "schema": {
+                     "$ref": "#/definitions/Success"
+                  }
+               },
+               "400": {
+                  "description": "Bad Request",
+                  "schema": {
+                     "$ref": "#/definitions/Error"
+                  }
+               },
+               "401": {
+                  "description": "Unauthorized",
+                  "schema": {
+                     "$ref": "#/definitions/Error"
+                  }
+               },
+               "500": {
+                  "description": "Internal Server Error",
+                  "schema": {
+                     "$ref": "#/definitions/Error"
+                  }
+               }
+            }
+         },
+         "patch": {
+            "produces": [
+               "application/json"
+            ],
+            "tags": [
+               "Habit operations"
+            ],
+            "summary": "update habits",
+            "parameters": [
+               {
+                  "type": "string",
+                  "description": "token",
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true
+               },
+               {
+                  "type": "string",
+                  "name": "id",
+                  "in": "path",
+                  "required": true
+               },
+               {
+                  "description": "Habit",
+                  "name": "requestBody",
+                  "in": "body",
+                  "required": true,
+                  "schema": {
+                     "$ref": "#/definitions/AddHabit"
+                  }
+               }
+            ],
+            "responses": {
+               "200": {
+                  "description": "OK",
+                  "schema": {
+                     "$ref": "#/definitions/Success"
+                  }
+               },
+               "400": {
+                  "description": "Bad Request",
+                  "schema": {
+                     "$ref": "#/definitions/Error"
+                  }
+               },
+               "401": {
+                  "description": "Unauthorized",
+                  "schema": {
+                     "$ref": "#/definitions/Error"
+                  }
+               },
+               "500": {
+                  "description": "Internal Server Error",
+                  "schema": {
+                     "$ref": "#/definitions/Error"
+                  }
+               }
+            }
+         }
+      },
+      "/habits/{id}/complete": {
+         "post": {
+            "tags": [
+               "Habit operations"
+            ],
+            "summary": "Tells that habit was completed",
+            "parameters": [
+               {
+                  "type": "string",
+                  "description": "token",
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true
+               },
+               {
+                  "type": "string",
+                  "name": "id",
+                  "in": "path",
+                  "required": true
+               },
+               {
+                  "description": "HabitDone",
+                  "name": "requestBody",
+                  "in": "body",
+                  "required": true,
+                  "schema": {
+                     "$ref": "#/definitions/HabitDone"
+                  }
+               }
+            ],
+            "responses": {
+               "200": {
+                  "description": "ok",
+                  "schema": {
+                     "properties": {
+                        "success": {
+                           "type": "boolean"
+                        }
+                     }
+                  }
+               },
+               "400": {
+                  "description": "Bad Request",
+                  "schema": {
+                     "$ref": "#/definitions/Error"
+                  }
+               },
+               "401": {
+                  "description": "Unauthorized",
+                  "schema": {
+                     "$ref": "#/definitions/Error"
+                  }
+               },
+               "500": {
+                  "description": "Internal Server Error",
+                  "schema": {
+                     "$ref": "#/definitions/Error"
+                  }
+               }
+            }
+         }
+      }
+   },
+   "definitions": {
+      "Success": {
+         "type": "object",
+         "properties": {
+            "success": {
+               "type": "boolean"
+            }
+         }
+      },
+      "Error": {
+         "type": "object",
+         "properties": {
+            "code": {
+               "type": "integer"
+            },
+            "message": {
+               "type": "string"
+            }
+         }
+      },
+      "Habits": {
+         "type": "object",
+         "properties": {
+            "count": {
+               "type": "integer"
+            },
+            "habits": {
+               "type": "array",
+               "items": {
+                  "$ref": "#/definitions/Habit"
+               }
+            }
+         }
+      },
+      "Habit": {
+         "type": "object",
+         "properties": {
+            "color": {
+               "type": "integer"
+            },
+            "count": {
+               "type": "integer"
+            },
+            "date": {
+               "type": "integer"
+            },
+            "description": {
+               "type": "string"
+            },
+            "done_dates": {
+               "type": "array",
+               "items": {
+                  "type": "integer"
+               }
+            },
+            "frequency": {
+               "type": "integer"
+            },
+            "priority": {
+               "type": "integer",
+               "enum": [
+                  0,
+                  1,
+                  2
+               ]
+            },
+            "title": {
+               "type": "string"
+            },
+            "type": {
+               "type": "integer",
+               "enum": [
+                  0,
+                  1
+               ]
+            },
+            "uid": {
+               "type": "string"
+            }
+         }
+      },
+      "UpdateHabit": {
+         "type": "object",
+         "properties": {
+            "color": {
+               "type": "integer"
+            },
+            "count": {
+               "type": "integer"
+            },
+            "date": {
+               "type": "integer"
+            },
+            "description": {
+               "type": "string"
+            },
+            "frequency": {
+               "type": "integer"
+            },
+            "priority": {
+               "type": "integer",
+               "enum": [
+                  0,
+                  1,
+                  2
+               ]
+            },
+            "title": {
+               "type": "string"
+            },
+            "type": {
+               "type": "integer",
+               "enum": [
+                  0,
+                  1
+               ]
+            }
+         }
+      },
+      "AddHabit": {
+         "type": "object",
+         "properties": {
+            "color": {
+               "type": "integer"
+            },
+            "count": {
+               "type": "integer"
+            },
+            "date": {
+               "type": "integer"
+            },
+            "description": {
+               "type": "string"
+            },
+            "frequency": {
+               "type": "integer"
+            },
+            "priority": {
+               "type": "integer",
+               "enum": [
+                  0,
+                  1,
+                  2
+               ]
+            },
+            "title": {
+               "type": "string"
+            },
+            "type": {
+               "type": "integer",
+               "enum": [
+                  0,
+                  1
+               ]
+            }
+         }
+      },
+      "HabitDone": {
+         "type": "object",
+         "properties": {
+            "date": {
+               "type": "integer"
+            }
+         }
+      },
+      "HabitUID": {
+         "type": "object",
+         "properties": {
+            "uid": {
+               "type": "string"
+            }
+         }
+      }
+   }
+}
