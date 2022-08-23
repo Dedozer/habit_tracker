@@ -45,11 +45,11 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
         currentIndex: _selectedTab,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.gps_not_fixed),
             label: 'Good habits',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.movie_filter),
+            icon: Icon(Icons.gps_off),
             label: 'Bad habits',
           ),
         ],

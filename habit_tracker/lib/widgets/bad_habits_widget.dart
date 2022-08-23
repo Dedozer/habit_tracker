@@ -218,11 +218,9 @@ class _BadHabitsWidgetState extends State<BadHabitsWidget> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    try {
-                                      int.parse(filteredEntries[index][4]);
-                                    } catch (e) {}
-                                    ;
-
+                                    if (filteredEntries[index][4].runtimeType != int){
+                                      filteredEntries[index][4] = int.parse(filteredEntries[index][4]);
+                                    }
                                     if (filteredEntries[index][4] > 0) {
                                       _boxUpdate(index, filteredEntries);
                                       showDialog(
@@ -230,7 +228,7 @@ class _BadHabitsWidgetState extends State<BadHabitsWidget> {
                                           builder: (context) {
                                             return AlertDialog(
                                               content: Text(
-                                                  'You can do it ${filteredEntries[index][4]} times'),
+                                                  'You can do it ${filteredEntries[index][4]} time(s)'),
                                               actions: <Widget>[
                                                 TextButton(
                                                   onPressed: () =>

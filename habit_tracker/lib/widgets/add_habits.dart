@@ -56,7 +56,7 @@ class _AddHabitsWidgetState extends State<AddHabitsWidget> {
       items.indexOf(dropdownvalue),
       selectedValue,
       _amountController.text,
-      _periodicityController.text
+      _periodicityController.text,
     ]);
     final habitsApi = Api.create();
     Response<Habit> response = await habitsApi.habitsPost(
@@ -71,6 +71,7 @@ class _AddHabitsWidgetState extends State<AddHabitsWidget> {
             date: timestamp.millisecondsSinceEpoch),
         authorization: ApiKeys().authorization);
     box.values.last.add(response.body!.uid);
+    box.values.last.add(timestamp.millisecondsSinceEpoch);
     return null;
   }
 
@@ -84,7 +85,9 @@ class _AddHabitsWidgetState extends State<AddHabitsWidget> {
       items.indexOf(dropdownvalue),
       selectedValue,
       _amountController.text,
-      _periodicityController.text
+      _periodicityController.text,
+      box.values.last[6],
+      box.values.last[7],
     ]);
   }
 
@@ -175,10 +178,12 @@ class _AddHabitsWidgetState extends State<AddHabitsWidget> {
             title: const Text('bad'),
           ),
           TextField(
+            keyboardType: TextInputType.number,
             controller: _amountController,
             decoration: decorator('Amount'),
           ),
           TextField(
+            keyboardType: TextInputType.number,
             controller: _periodicityController,
             decoration: decorator('Periodicity'),
           ),

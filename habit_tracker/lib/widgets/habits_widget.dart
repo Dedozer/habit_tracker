@@ -25,34 +25,38 @@ var type = [
   'bad',
 ];
 
-Future<List> getSortedHabits(searchController) async {
-  var mymap = await getHabits();
-  List<dynamic> filteredEntries = [];
-  if (searchController.text.isNotEmpty) {
-    filteredEntries = mymap.where((element) {
-      return element.contains(searchController.text.toLowerCase());
-    }).toList();
-  } else {
-    filteredEntries = mymap;
-  }
-  return filteredEntries;
-}
-
-void _boxUpdate(index, filteredEntries) async {
-  await Hive.initFlutter();
-  Box<dynamic> box = await Hive.openBox('storage');
-  var value = filteredEntries[index];
-  value[4] -= 1;
-  box.putAt(index, value);
-}
-
 class _HabitsWidgetState extends State<HabitsWidget> {
   List<dynamic> filteredEntries = [];
+
+  Future<List> getSortedHabits(searchController) async {
+    var mymap = await getHabits();
+    List<dynamic> filteredEntries = [];
+    if (searchController.text.isNotEmpty) {
+      filteredEntries = mymap.where((element) {
+        return element[0].toLowerCase().contains(searchController.text.toLowerCase());
+      }).toList();
+    } else {
+      filteredEntries = mymap;
+    }
+    setState(() {
+      
+    });
+    return filteredEntries;
+  }
+
+  void _boxUpdate(index, filteredEntries) async {
+    await Hive.initFlutter();
+    Box<dynamic> box = await Hive.openBox('storage');
+    var value = filteredEntries[index];
+    value[4] -= 1;
+    box.putAt(index, value);
+  }
+
   final _searchController = TextEditingController();
 
   void _searchHabits() async {
     filteredEntries = await getSortedHabits(_searchController);
-    setState(() {});
+    print(filteredEntries);
   }
 
   @override
@@ -212,10 +216,11 @@ class _HabitsWidgetState extends State<HabitsWidget> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    try {
-                                      int.parse(filteredEntries[index][4]);
-                                    } catch (e) {}
-                                    ;
+                                    if (filteredEntries[index][4].runtimeType !=
+                                        int) {
+                                      filteredEntries[index][4] =
+                                          int.parse(filteredEntries[index][4]);
+                                    }
 
                                     if (filteredEntries[index][4] > 0) {
                                       _boxUpdate(index, filteredEntries);
@@ -224,7 +229,7 @@ class _HabitsWidgetState extends State<HabitsWidget> {
                                           builder: (context) {
                                             return AlertDialog(
                                               content: Text(
-                                                  'You can do it ${filteredEntries[index][4]} times'),
+                                                  'Worth doing ${filteredEntries[index][4]} more time(s)'),
                                               actions: <Widget>[
                                                 TextButton(
                                                   onPressed: () =>
@@ -241,7 +246,7 @@ class _HabitsWidgetState extends State<HabitsWidget> {
                                           builder: (context) {
                                             return AlertDialog(
                                               title: const Text(
-                                                  'Stop doing this!'),
+                                                  "You are breathtaking!"),
                                               actions: <Widget>[
                                                 TextButton(
                                                   onPressed: () =>
