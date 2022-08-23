@@ -24,7 +24,7 @@ void _apiSynchronizer() async{
   if (box.values.isEmpty){
     Response<Habits> response = await habitsApi.habitsGet(authorization: ApiKeys().authorization);
     for (var habit in response.body!.habits!){
-      box.add([habit.title,habit.description, habit.priority, habit.type, habit.count, habit.frequency, habit.uid]);
+      box.add([habit.title,habit.description, habit.priority, habit.type, habit.count, habit.frequency,habit.uid, habit.uid,habit.date]);
     }
   }
 }

@@ -14,6 +14,9 @@ Future<List> getHabits() async {
   return box.values.toList();
 }
 
+Icon filteredIcon = Icon(Icons.arrow_downward);
+bool flagSort = true;
+
 var prioprity = [
   'Low',
   'Medium',
@@ -33,14 +36,29 @@ class _HabitsWidgetState extends State<HabitsWidget> {
     List<dynamic> filteredEntries = [];
     if (searchController.text.isNotEmpty) {
       filteredEntries = mymap.where((element) {
-        return element[0].toLowerCase().contains(searchController.text.toLowerCase());
+        return element[0]
+            .toLowerCase()
+            .contains(searchController.text.toLowerCase());
       }).toList();
     } else {
       filteredEntries = mymap;
     }
-    setState(() {
-      
-    });
+    setState(() {});
+    return filteredEntries;
+  }
+
+  List<dynamic> sortedHabits() {
+    if (flagSort == true){
+    filteredEntries.sort((a, b) => a[7].compareTo(b[7]));
+    filteredIcon = Icon(Icons.arrow_upward);
+    flagSort = false;
+    }
+    else{
+      filteredEntries.sort((a, b) => b[7].compareTo(a[7]));
+      filteredIcon = Icon(Icons.arrow_downward);
+      flagSort = true;
+    }
+    setState(() {});
     return filteredEntries;
   }
 
@@ -64,10 +82,14 @@ class _HabitsWidgetState extends State<HabitsWidget> {
     super.initState();
     _searchController.addListener(_searchHabits);
   }
-
+  bool flagInit = true;
   @override
   Widget build(BuildContext context) {
-    _searchHabits();
+    if (flagInit == true){
+          _searchHabits();
+          flagInit = false;
+    }
+    final currentWidth = MediaQuery.of(context).size.width;
     return Stack(
       children: [
         FutureBuilder(
@@ -278,14 +300,42 @@ class _HabitsWidgetState extends State<HabitsWidget> {
             }),
         Padding(
           padding: const EdgeInsets.all(10.0),
-          child: TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              labelText: 'Search',
-              filled: true,
-              fillColor: Colors.white.withAlpha(235),
-              border: const OutlineInputBorder(),
-            ),
+          child: Row(
+            children: [
+              Container(
+                width: 30,
+                child: IconButton(
+                  icon: Icon(Icons.replay),
+                  onPressed: () {
+                    _searchHabits();
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Container(
+                width: currentWidth - 90,
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    labelText: 'Search',
+                    filled: true,
+                    fillColor: Colors.white.withAlpha(235),
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              Container(
+                width: 30,
+                child: IconButton(
+                  icon: filteredIcon,
+                  onPressed: () {
+                    sortedHabits();
+                  },
+                ),
+              )
+            ],
           ),
         ),
       ],

@@ -1,13 +1,8 @@
-import 'package:chopper/chopper.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../generated/api.swagger.dart';
-import '../sources/api_keys.dart';
-
 class BadHabitsWidget extends StatefulWidget {
-  BadHabitsWidget({Key? key}) : super(key: key);
+  const BadHabitsWidget({Key? key}) : super(key: key);
 
   @override
   State<BadHabitsWidget> createState() => _BadHabitsWidgetState();
@@ -18,6 +13,9 @@ Future<List> getHabits() async {
   Box<dynamic> box = await Hive.openBox('storage');
   return box.values.toList();
 }
+
+Icon filteredIcon = Icon(Icons.arrow_downward);
+bool flagSort = true;
 
 var prioprity = [
   'Low',
@@ -30,46 +28,74 @@ var type = [
   'bad',
 ];
 
-Future<List> getSortedHabits(searchController) async {
-  var mymap = await getHabits();
-  List<dynamic> filteredEntries = [];
-  if (searchController.text.isNotEmpty) {
-    filteredEntries = mymap.where((element) {
-      return element.contains(searchController.text.toLowerCase());
-    }).toList();
-  } else {
-    filteredEntries = mymap;
-  }
-  return filteredEntries;
-}
-
-void _boxUpdate(index, filteredEntries) async {
-  await Hive.initFlutter();
-  Box<dynamic> box = await Hive.openBox('storage');
-  var value = filteredEntries[index];
-  value[4] -= 1;
-  box.putAt(index, value);
-}
-
 class _BadHabitsWidgetState extends State<BadHabitsWidget> {
   List<dynamic> filteredEntries = [];
+
+  Future<List> getSortedHabits(searchController) async {
+    var mymap = await getHabits();
+    List<dynamic> filteredEntries = [];
+    if (searchController.text.isNotEmpty) {
+      filteredEntries = mymap.where((element) {
+        return element[0]
+            .toLowerCase()
+            .contains(searchController.text.toLowerCase());
+      }).toList();
+    } else {
+      filteredEntries = mymap;
+    }
+    setState(() {});
+    return filteredEntries;
+  }
+
+  List<dynamic> sortedHabits() {
+    if (flagSort == true) {
+      if (filteredEntries.isEmpty) {
+      } else {
+        filteredEntries.sort((a, b) => a[7].compareTo(b[7]));
+      }
+      filteredIcon = Icon(Icons.arrow_upward);
+      flagSort = false;
+    } else {
+      if (filteredEntries.isEmpty) {
+      } else {
+        filteredEntries.sort((a, b) => b[7].compareTo(a[7]));
+      }
+      filteredIcon = Icon(Icons.arrow_downward);
+      flagSort = true;
+    }
+    setState(() {});
+    return filteredEntries;
+  }
+
+  void _boxUpdate(index, filteredEntries) async {
+    await Hive.initFlutter();
+    Box<dynamic> box = await Hive.openBox('storage');
+    var value = filteredEntries[index];
+    value[4] -= 1;
+    box.putAt(index, value);
+  }
+
   final _searchController = TextEditingController();
 
   void _searchHabits() async {
     filteredEntries = await getSortedHabits(_searchController);
-    setState(() {});
+    print(filteredEntries);
   }
 
   @override
   void initState() {
     super.initState();
-
     _searchController.addListener(_searchHabits);
   }
 
+  bool flagInit = true;
   @override
   Widget build(BuildContext context) {
-    _searchHabits();
+    if (flagInit == true) {
+      _searchHabits();
+      flagInit = false;
+    }
+    final currentWidth = MediaQuery.of(context).size.width;
     return Stack(
       children: [
         FutureBuilder(
@@ -210,6 +236,7 @@ class _BadHabitsWidgetState extends State<BadHabitsWidget> {
                                                   filteredEntries[index],
                                                   index
                                                 ]);
+                                            setState(() {});
                                           },
                                         ),
                                       ),
@@ -218,9 +245,12 @@ class _BadHabitsWidgetState extends State<BadHabitsWidget> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    if (filteredEntries[index][4].runtimeType != int){
-                                      filteredEntries[index][4] = int.parse(filteredEntries[index][4]);
+                                    if (filteredEntries[index][4].runtimeType !=
+                                        int) {
+                                      filteredEntries[index][4] =
+                                          int.parse(filteredEntries[index][4]);
                                     }
+
                                     if (filteredEntries[index][4] > 0) {
                                       _boxUpdate(index, filteredEntries);
                                       showDialog(
@@ -228,7 +258,7 @@ class _BadHabitsWidgetState extends State<BadHabitsWidget> {
                                           builder: (context) {
                                             return AlertDialog(
                                               content: Text(
-                                                  'You can do it ${filteredEntries[index][4]} time(s)'),
+                                                  'Worth doing ${filteredEntries[index][4]} more time(s)'),
                                               actions: <Widget>[
                                                 TextButton(
                                                   onPressed: () =>
@@ -245,7 +275,7 @@ class _BadHabitsWidgetState extends State<BadHabitsWidget> {
                                           builder: (context) {
                                             return AlertDialog(
                                               title: const Text(
-                                                  'Stop doing this!'),
+                                                  "You are breathtaking!"),
                                               actions: <Widget>[
                                                 TextButton(
                                                   onPressed: () =>
@@ -277,14 +307,42 @@ class _BadHabitsWidgetState extends State<BadHabitsWidget> {
             }),
         Padding(
           padding: const EdgeInsets.all(10.0),
-          child: TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              labelText: 'Search',
-              filled: true,
-              fillColor: Colors.white.withAlpha(235),
-              border: const OutlineInputBorder(),
-            ),
+          child: Row(
+            children: [
+              Container(
+                width: 30,
+                child: IconButton(
+                  icon: Icon(Icons.replay),
+                  onPressed: () {
+                    _searchHabits();
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Container(
+                width: currentWidth - 90,
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    labelText: 'Search',
+                    filled: true,
+                    fillColor: Colors.white.withAlpha(235),
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              Container(
+                width: 30,
+                child: IconButton(
+                  icon: filteredIcon,
+                  onPressed: () {
+                    sortedHabits();
+                  },
+                ),
+              )
+            ],
           ),
         ),
       ],

@@ -47,17 +47,8 @@ class _AddHabitsWidgetState extends State<AddHabitsWidget> {
     DateTime time = DateTime.now();
     final timestamp =
         DateTime.fromMicrosecondsSinceEpoch(time.microsecondsSinceEpoch);
-    Navigator.pop(context);
     await Hive.initFlutter();
     var box = await Hive.openBox('storage');
-    await box.add([
-      _nameController.text,
-      _descriptionController.text,
-      items.indexOf(dropdownvalue),
-      selectedValue,
-      _amountController.text,
-      _periodicityController.text,
-    ]);
     final habitsApi = Api.create();
     Response<Habit> response = await habitsApi.habitsPost(
         requestBody: AddHabit(
@@ -70,8 +61,17 @@ class _AddHabitsWidgetState extends State<AddHabitsWidget> {
             color: 0,
             date: timestamp.millisecondsSinceEpoch),
         authorization: ApiKeys().authorization);
-    box.values.last.add(response.body!.uid);
-    box.values.last.add(timestamp.millisecondsSinceEpoch);
+    await box.add([
+      _nameController.text,
+      _descriptionController.text,
+      items.indexOf(dropdownvalue),
+      selectedValue,
+      _amountController.text,
+      _periodicityController.text,
+      response.body!.uid,
+      timestamp.millisecondsSinceEpoch
+    ]);
+    Navigator.pop(context);
     return null;
   }
 
