@@ -131,18 +131,44 @@ class _AddHabitsWidgetState extends State<AddHabitsWidget> {
     );
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
+      body: ListView(
         children: [
-          TextField(
-            controller: _nameController,
-            decoration: decorator('Name'),
-          ),
-          TextField(
-            controller: _descriptionController,
-            decoration: decorator('Description'),
+          const SizedBox(
+            height: 5,
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0),
+            padding: const EdgeInsets.only(left: 8.0, right: 8),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Name',
+                    filled: true,
+                    fillColor: Colors.white.withAlpha(235),
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                TextField(
+                  controller: _descriptionController,
+                  decoration: InputDecoration(
+                    labelText: 'Description',
+                    filled: true,
+                    fillColor: Colors.white.withAlpha(235),
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 12.0),
             child: Align(
               alignment: Alignment.topLeft,
               child: DropdownButton(
@@ -177,15 +203,38 @@ class _AddHabitsWidgetState extends State<AddHabitsWidget> {
                 setState(() => {selectedValue = value as int}),
             title: const Text('bad'),
           ),
-          TextField(
-            keyboardType: TextInputType.number,
-            controller: _amountController,
-            decoration: decorator('Amount'),
-          ),
-          TextField(
-            keyboardType: TextInputType.number,
-            controller: _periodicityController,
-            decoration: decorator('Periodicity'),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 8.0,
+              right: 8.0,
+            ),
+            child: Column(
+              children: [
+                TextField(
+                  keyboardType: TextInputType.number,
+                  controller: _amountController,
+                  decoration: InputDecoration(
+                    labelText: 'Amount',
+                    filled: true,
+                    fillColor: Colors.white.withAlpha(235),
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                TextField(
+                  keyboardType: TextInputType.number,
+                  controller: _periodicityController,
+                  decoration: InputDecoration(
+                    labelText: 'Periodicity',
+                    filled: true,
+                    fillColor: Colors.white.withAlpha(235),
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+              ],
+            ),
           ),
           Center(
             child: TextButton(
@@ -220,18 +269,19 @@ class _AddHabitsWidgetState extends State<AddHabitsWidget> {
                   _deleteHabit(context);
                 } else {
                   showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          content: const Text("You can't delete this"),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'OK'),
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
-                      });
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: const Text("You can't delete this"),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 }
               },
               child: const Text('Delete'),

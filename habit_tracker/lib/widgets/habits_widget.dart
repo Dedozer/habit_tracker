@@ -14,7 +14,7 @@ Future<List> getHabits() async {
   return box.values.toList();
 }
 
-Icon filteredIcon = Icon(Icons.arrow_downward);
+Icon filteredIcon = const Icon(Icons.arrow_downward);
 bool flagSort = true;
 
 var prioprity = [
@@ -50,12 +50,12 @@ class _HabitsWidgetState extends State<HabitsWidget> {
   List<dynamic> sortedHabits() {
     if (flagSort == true){
     filteredEntries.sort((a, b) => a[7].compareTo(b[7]));
-    filteredIcon = Icon(Icons.arrow_upward);
+    filteredIcon = const Icon(Icons.arrow_upward);
     flagSort = false;
     }
     else{
       filteredEntries.sort((a, b) => b[7].compareTo(a[7]));
-      filteredIcon = Icon(Icons.arrow_downward);
+      filteredIcon = const Icon(Icons.arrow_downward);
       flagSort = true;
     }
     setState(() {});
@@ -305,13 +305,13 @@ class _HabitsWidgetState extends State<HabitsWidget> {
               Container(
                 width: 30,
                 child: IconButton(
-                  icon: Icon(Icons.replay),
+                  icon: const Icon(Icons.replay),
                   onPressed: () {
                     _searchHabits();
                   },
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Container(
