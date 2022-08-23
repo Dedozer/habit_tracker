@@ -258,7 +258,7 @@ class _BadHabitsWidgetState extends State<BadHabitsWidget> {
                                           builder: (context) {
                                             return AlertDialog(
                                               content: Text(
-                                                  'Worth doing ${filteredEntries[index][4]} more time(s)'),
+                                                  'You can do it ${filteredEntries[index][4]} more time(s)'),
                                               actions: <Widget>[
                                                 TextButton(
                                                   onPressed: () =>
